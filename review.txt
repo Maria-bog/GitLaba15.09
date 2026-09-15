@@ -1,2 +1,2 @@
-application_mode=feature
+application_mode=feature #Комментарий
 debug=true
