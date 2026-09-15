@@ -18,3 +18,22 @@ jobs:
 
       - name: Check README
         run: test -f README.md
+
+  trufflehog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare repository snapshot
+        run: |
+          mkdir -p /tmp/trufflehog-scan
+          git archive HEAD | tar -x -C /tmp/trufflehog-scan
+
+      - name: Scan secrets
+        run: |
+          docker run --rm \
+            -v /tmp/trufflehog-scan:/scan \
+            ghcr.io/trufflesecurity/trufflehog:latest \
+            filesystem /scan --fail --no-verification
